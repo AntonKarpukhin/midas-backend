@@ -1,10 +1,13 @@
-import { BaseEntity } from "../../utils/base-entity";
-import { Column, OneToOne, JoinColumn, Entity } from "typeorm";
+import { Column, OneToOne, JoinColumn, Entity, PrimaryGeneratedColumn, ManyToMany, ManyToOne } from "typeorm";
 import { User } from "../../users/entities/user.entity";
-import { IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { IsInt, IsNotEmpty, IsNumber, IsString } from "class-validator";
 
 @Entity()
-export class Basket extends BaseEntity {
+export class Basket {
+
+	@PrimaryGeneratedColumn()
+	@IsInt()
+	id: number
 
 	@Column()
 	@IsString()
@@ -36,7 +39,7 @@ export class Basket extends BaseEntity {
 	@IsNotEmpty()
 	sumPrice: number;
 
-	@OneToOne(() => User)
+	@ManyToOne(() => User)
 	@JoinColumn()
 	user: User
 }

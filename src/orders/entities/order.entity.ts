@@ -1,8 +1,15 @@
-import { BaseEntity } from "../../utils/base-entity";
-import { Column, Entity, ManyToMany, ManyToOne, OneToMany } from "typeorm";
-import { IsEmail, IsNotEmpty, IsOptional, IsPhoneNumber, IsString, MaxLength, MinLength } from "class-validator";
+import {
+	Column,
+	CreateDateColumn,
+	Entity,
+	ManyToOne,
+	OneToMany,
+	PrimaryGeneratedColumn,
+	UpdateDateColumn
+} from "typeorm";
+import { IsDate, IsEmail, IsInt, IsNotEmpty, IsPhoneNumber, IsString, MaxLength, MinLength } from "class-validator";
 import { User } from "../../users/entities/user.entity";
-import { Dish } from "../../dishes/entities/dish.entity";
+import { DishOrder } from "../../dish-order/entities/dish-order.entity";
 
 enum DeliveryMethod {
 	home = 'home',
@@ -10,19 +17,31 @@ enum DeliveryMethod {
 }
 
 @Entity()
-export class Order extends BaseEntity {
+export class Order {
 
-	@Column({ unique: true })
+	@PrimaryGeneratedColumn()
+	@IsInt()
+	id: number
+
+	@CreateDateColumn()
+	@IsDate()
+	createdAt: Date
+
+	@UpdateDateColumn()
+	@IsDate()
+	updatedAt: Date
+
+	@Column()
 	@IsString()
 	@IsNotEmpty()
 	username: string;
 
-	@Column({ unique: true })
+	@Column()
 	@IsNotEmpty()
 	@IsEmail()
 	email: string;
 
-	@Column({ unique: true })
+	@Column()
 	@IsNotEmpty()
 	@IsPhoneNumber()
 	phone: string;
@@ -51,15 +70,6 @@ export class Order extends BaseEntity {
 	})
 	room: string;
 
-	@Column()
-	@IsOptional()
-	@IsString()
-	@IsNotEmpty()
-	@MaxLength(1000, {
-		message: 'Комментарий должен быть не более 1000 символов',
-	})
-	comments: string;
-
 	@Column({ enum: DeliveryMethod })
 	@IsNotEmpty()
 	@IsString()
@@ -68,6 +78,6 @@ export class Order extends BaseEntity {
 	@ManyToOne(() => User, (user) => user.order)
 	user: User;
 
-	@ManyToMany(() => Dish, dish => dish.order)
-	dishes: Dish[];
+	@OneToMany(() => DishOrder, (dish) => dish.order)
+	dishes: DishOrder[];
 }

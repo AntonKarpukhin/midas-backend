@@ -1,5 +1,5 @@
 import { BaseEntity } from "../../utils/base-entity";
-import { Column, Entity, OneToMany, OneToOne } from "typeorm";
+import { Column, Entity, ManyToMany, OneToMany, OneToOne } from "typeorm";
 import {
 	IsEmail,
 	IsNotEmpty,
@@ -42,7 +42,7 @@ export class User extends BaseEntity {
 	@Column({ unique: true, nullable: true })
 	@IsOptional()
 	@IsPhoneNumber()
-	phone: string;
+	phone: string | null;
 
 	@Column({nullable: true })
 	@IsOptional()
@@ -52,25 +52,25 @@ export class User extends BaseEntity {
 	@MaxLength(30, {
 		message: 'Название улицы должно быть не более 30 букв',
 	})
-	street: string;
+	street: string | null;
 
 	@Column({nullable: true })
 	@IsOptional()
 	@MinLength(1, {
 		message: 'Номер дома должен быть не менее 1 цифры',
 	})
-	house: string;
+	house: string | null;
 
 	@Column({nullable: true })
 	@IsOptional()
 	@MinLength(1, {
 		message: 'Номер квартиры должен быть не менее 1 цифры',
 	})
-	room: string;
+	room: string | null;
 
 	@OneToMany(() => Order, (order) => order.user)
 	order: Order[];
 
-	@OneToOne(() => Basket, basket => basket.user)
-	basket: Basket;
+	@OneToMany(() => Basket, basket => basket.user)
+	basket: Basket[];
 }

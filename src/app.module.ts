@@ -7,6 +7,7 @@ import { MenuModule } from './menu/menu.module';
 import { DishesModule } from './dishes/dishes.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { DishOrderModule } from './dish-order/dish-order.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 	  BasketModule,
 	  DishesModule,
 	  AuthModule,
+	  DishOrderModule,
 	  ConfigModule.forRoot({isGlobal: true}),
 	  TypeOrmModule.forRootAsync({
 		  imports: [ConfigModule],
@@ -31,6 +33,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 		  }),
 		  inject: [ConfigService]
 	}),
+	  DishOrderModule,
   ],
   controllers: [],
   providers: [],

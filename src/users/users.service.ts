@@ -43,24 +43,35 @@ export class UsersService {
 	}
 
 	async updateUser(user: User, updateUserDto: UpdateUserDto): Promise<TUser> {
-		const { email, username } = updateUserDto;
-		if (updateUserDto.password) {
-			updateUserDto.password = this.hashService.getHash(updateUserDto.password);
+
+		const userComparison = await this.findUserInfo('id', user.id)
+
+		if (updateUserDto.password) updateUserDto.password = this.hashService.getHash(updateUserDto.password);
+
+		if (updateUserDto.username !== userComparison.username) {
+			const newUser = await this.findUserName(updateUserDto.username)
+			if (newUser?.username === updateUserDto.username) {
+				throw new ConflictException(
+					'Пользователь с таким именем уже зарегистрирован',
+				);
+			}
 		}
 
-		const isExist = !!(await this.userRepository.findOne({
-			where: [{ email }, { username }],
-		}));
-
-		if (isExist) {
-			throw new ConflictException(
-				'Пользователь с таким email или username уже зарегистрирован',
-			);
+		if (updateUserDto.email !== userComparison.email) {
+			const newUser = await this.findUserEmail(updateUserDto.email)
+			if (newUser.email === updateUserDto.email) {
+				throw new ConflictException(
+					'Пользователь с таким email уже зарегистрирован',
+				);
+			}
 		}
 
-		const updateUserInfo = await this.findUserInfo('id', user.id);
-		Object.assign(updateUserInfo, updateUserDto);
-		const { password, ...newUser } = updateUserInfo;
+		const updateUser: User = {
+			...userComparison,
+			...updateUserDto
+		}
+
+		const { password, ...newUser } = updateUser;
 		return await this.userRepository.save(newUser);
 	}
 

@@ -10,8 +10,18 @@ export class BasketController {
 	constructor(private readonly basketService: BasketService) {}
 
 	@Post()
-	async addBasketDish(@Req() req: IRequestUser, @Body() dish: TRequestDish): Promise<Basket[]> {
-		return await this.basketService.createBasketDish(req.user, dish);
+	async addBasketDish(@Req() req: IRequestUser, @Body('idCount') idCount: {name: string, count: number}): Promise<Basket[]> {
+		const {name, count} = idCount;
+		return await this.basketService.createBasketDish(req.user, name, count);
 	}
 
+	@Post('/delete')
+	async deleteBasketDish(@Req() req: IRequestUser, @Body('name') name: string): Promise<Basket[]> {
+		return await this.basketService.deleteDish(req.user, name);
+	}
+
+	@Get()
+	async getAllBasketDish(@Req() req: IRequestUser): Promise<Basket[]> {
+		return await this.basketService.findAllDishes(req.user);
+	}
 }

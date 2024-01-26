@@ -1,4 +1,4 @@
-import { IsEmail, IsOptional, IsPhoneNumber, IsString, Length } from "class-validator";
+import { IsEmail, IsOptional, IsPhoneNumber, IsString, Length, MaxLength, MinLength } from "class-validator";
 
 export class UpdateUserDto {
 	@IsOptional()
@@ -8,8 +8,10 @@ export class UpdateUserDto {
 
 	@IsOptional()
 	@IsString()
-	@Length(6, 20)
-	password?: string;
+	@MinLength(4, {
+		message: 'Пароль должен быть не менее 4 символов',
+	})
+	password?: string | null;
 
 	@IsOptional()
 	@IsEmail()
@@ -18,20 +20,29 @@ export class UpdateUserDto {
 
 	@IsOptional()
 	@IsPhoneNumber()
-	phone?: string;
+	phone?: string | null;
 
 	@IsOptional()
 	@IsString()
-	@Length(2, 30)
-	street?: string;
+	@MinLength(2, {
+		message: 'Название улицы должно быть не менее 2 букв',
+	})
+	@MaxLength(30, {
+		message: 'Название улицы должно быть не более 30 букв',
+	})
+	street?: string | null;
 
 	@IsOptional()
 	@IsString()
-	@Length(1)
-	house?: string;
+	@MinLength(1, {
+		message: 'Номер дома должен быть не менее 1 цифры',
+	})
+	house?: string | null;
 
 	@IsOptional()
 	@IsString()
-	@Length(1)
-	room?: string;
+	@MinLength(1, {
+		message: 'Номер квартиры должен быть не менее 1 цифры',
+	})
+	room?: string | null;
 }

@@ -10,10 +10,10 @@ export class DishesService {
 		private readonly dishRepository: Repository<Dish>,
 	) {}
 
-	async findDishName(dishName: string): Promise<Dish> {
+	async findDishId( id: number): Promise<Dish> {
 		return await this.dishRepository.findOne({
 			where: {
-				name: dishName
+				id: id
 			}
 		})
 	}

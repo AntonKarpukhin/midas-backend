@@ -6,8 +6,8 @@ import { Dish } from "./entities/dish.entity";
 export class DishesController {
 	constructor(private readonly dishesService: DishesService) {}
 
-	@Get(':name')
-	async getDish(@Param('name') name: string): Promise<Dish> {
-		return await this.dishesService.findDishName(name);
+	@Get(':id')
+	async getDish(@Param('id') id: number): Promise<Dish> {
+		return await this.dishesService.findDishId(id);
 	}
 }

@@ -1,11 +1,9 @@
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { IsInt, IsNotEmpty, IsNumber, IsString } from "class-validator";
-import { Menu } from "../../menu/entities/menu.entity";
 import { Order } from "../../orders/entities/order.entity";
 
 @Entity()
-export class Dish {
-
+export class DishOrder {
 	@PrimaryGeneratedColumn()
 	@IsInt()
 	id: number
@@ -16,19 +14,9 @@ export class Dish {
 	name: string;
 
 	@Column()
-	@IsString()
-	@IsNotEmpty()
-	description: string;
-
-	@Column()
 	@IsNumber()
 	@IsNotEmpty()
 	price: number;
-
-	@Column()
-	@IsNumber()
-	@IsNotEmpty()
-	oldPrice: number;
 
 	@Column()
 	@IsString()
@@ -40,6 +28,14 @@ export class Dish {
 	@IsNotEmpty()
 	weight: string;
 
-	@ManyToOne(() => Menu, (menu) => menu.dish)
-	fc_menu: Menu;
+	@Column()
+	@IsNumber()
+	count: number
+
+	@Column()
+	@IsNumber()
+	sumPrice: number
+
+	@ManyToOne(() => Order, (order) => order.dishes)
+	order: Order;
 }
