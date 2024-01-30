@@ -11,7 +11,7 @@ COPY --from=builder /app/package*.json ./
 RUN npm i --omit=dev && npm i pm2 -g
 COPY --from=builder /app/dist ./dist/
 COPY --from=builder /app/midas-backend.config.js .
-EXPOSE 3000
+EXPOSE 80
 CMD ["pm2-runtime", "start", "midas-backend.config.js"]
 
 
